@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Play, Loader2, Info } from "lucide-react"
 import Link from "next/link"
 import AudioModal from "@/components/audio-modal"
@@ -85,6 +85,10 @@ const characteristics = [
   { id: "tired", label: "Cansado/a", icon: "😴" },
   { id: "angry", label: "Enojado/a", icon: "😠" },
   { id: "confused", label: "Confundido/a", icon: "🤔" },
+  { id: "gratitude", label: "Gratitud", icon: "🙏" },
+  { id: "compassion", label: "Compasión", icon: "💝" },
+  { id: "joy", label: "Alegría", icon: "😊" },
+  { id: "hope", label: "Esperanza", icon: "🌟" },
 ]
 
 export default function AvatarPage() {
