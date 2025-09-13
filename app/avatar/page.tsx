@@ -185,7 +185,7 @@ export default function AvatarPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-white/80 hover:bg-white"
+                  className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-white/80 hover:bg-gray-200"
                   onClick={(e) => handlePlantInfo(plant, e)}
                 >
                   <Info className="w-4 h-4" />

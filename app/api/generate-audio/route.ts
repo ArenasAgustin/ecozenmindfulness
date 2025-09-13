@@ -115,7 +115,7 @@ Devolveme solo el texo a usar, ten en cuenta que eres un profecional en mindfuln
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-5-nano",
+        model: "openai/gpt-4.1-mini",
         messages: [
           {
             role: "user",
