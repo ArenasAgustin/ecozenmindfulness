@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
     const plantPrompts = {
       bamboo: {
         voice: "Voz suave y flexible como el viento entre bambúes",
+        voiceId: process.env.VOICE_ID_BAMBU || "21m00Tcm4TlvDq8ikWAM", // Environment variable or default
         script: `Bienvenido a tu sesión de mindfulness con el Bambú Resiliente. 
         Imagina que estás en un bosque de bambú asiático, donde las cañas se mecen suavemente con el viento.
         Como el bambú, tú también puedes doblarte sin romperte. Respira profundamente y siente cómo tu flexibilidad interior te da fuerza.
@@ -19,20 +20,24 @@ export async function POST(request: NextRequest) {
       },
       lotus: {
         voice: "Voz cristalina y pura como agua tranquila",
+        voiceId: process.env.VOICE_ID_LOTO || "EXAVITQu4vr4xnSDxMaL", // Environment variable or default
         script: `Te doy la bienvenida a tu sesión con el Loto Purificador.
         Visualiza un estanque sereno donde florece un hermoso loto. Como esta flor sagrada, tú emerges de las dificultades con pureza renovada.
         Respira lentamente y siente cómo cada exhalación libera lo que ya no necesitas. Con cada inhalación, renuevas tu claridad mental.
         Eres puro potencial, floreciendo desde tu interior hacia la luz. Permítete renacer en este momento de calma profunda.`,
       },
-      pine: {
-        voice: "Voz profunda y estable como montañas antiguas",
-        script: `Bienvenido a tu práctica con el Pino Enraizado.
-        Siéntete como un pino majestuoso en la montaña, con raíces profundas que te conectan con la tierra y ramas que tocan el cielo.
-        Respira el aire fresco de la montaña y siente tu estabilidad interior. Eres fuerte, eres constante, eres protector de tu propia paz.
-        Con cada respiración, tus raíces se profundizan más en la sabiduría ancestral. Eres el guardián de tu propio bienestar.`,
+      ceibo: {
+        voice: "Voz femenina de 32 años con suave acento argentino, cálida y melodiosa",
+        voiceId: process.env.VOICE_ID_CEIBO || "pNInz6obpgDQGcFmaJgB", // Environment variable or default
+        script: `Hola, soy Ceibo. Mi flor roja arde con la pasión de la vida que siempre renace. 
+        Como florezco después de cada tormenta, vos también podés encontrar tu fuerza. 
+        El fuego de mi flor es el mismo fuego de tu corazón cuando decide no rendirse jamás.
+        Respirá conmigo y sentí cómo mis raíces se entrelazan con toda la selva, dándote la fuerza de la naturaleza argentina.
+        Mi flor roja es fuego que renace, y vos también podés renacer más fuerte después de cada adversidad.`,
       },
       cactus: {
         voice: "Voz cálida y contenida como el desierto al amanecer",
+        voiceId: process.env.VOICE_ID_CACTUS || "29vD33N1CtxCmqQRPOHJ", // Environment variable or default
         script: `Te saludo en tu sesión con el Cactus Resistente.
         Imagínate en un desierto sereno al amanecer, donde la belleza se encuentra en la simplicidad y la resistencia silenciosa.
         Como el cactus que florece en condiciones adversas, tú también tienes una fuerza interior extraordinaria.
@@ -66,7 +71,7 @@ export async function POST(request: NextRequest) {
 
     // ElevenLabs API call
     const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY
-    const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM" // Default voice
+    const VOICE_ID = selectedPlant.voiceId
 
     if (!ELEVENLABS_API_KEY) {
       return NextResponse.json({ error: "ElevenLabs API key not configured" }, { status: 500 })

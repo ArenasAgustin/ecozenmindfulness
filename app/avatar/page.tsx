@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Play, Loader2 } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import AudioModal from "@/components/audio-modal"
 
 const plants = [
   {
@@ -38,18 +38,27 @@ const plants = [
     instruments: ["Arpa ligera", "Piano minimalista", "Campanas de agua"],
   },
   {
-    id: "pine",
-    name: "Pino Enraizado",
-    image: "/mountain-pine-forest.jpg",
-    personality: "Estable y protector",
-    specialties: ["Estabilidad", "Fortaleza interior", "Conexión con la tierra"],
+    id: "ceibo",
+    name: "Ceibo Renaciente",
+    image: "/ceibo-red-flower.jpg",
+    personality: "Apasionado y resiliente",
+    specialties: ["Renacimiento", "Fuerza motivadora", "Pasión de vida"],
     description:
-      "Ambiente de bosque de montaña con violonchelo y flauta de madera. Te conecta con tu fuerza interior y raíces profundas.",
-    color: "bg-green-100 border-green-300",
+      "Flor nacional argentina que renace después de tormentas. Con voz cálida y acento argentino, te abraza con calidez maternal y fuerza motivadora.",
+    color: "bg-red-100 border-red-300",
     musicDescription:
-      "8-12 minutos de drones graves, viento en pinos y melodías que transmiten estabilidad y arraigo profundo.",
-    tempo: "50-60 BPM",
-    instruments: ["Violonchelo pizzicato", "Contrabajo", "Flauta de madera"],
+      "Voz femenina de 32 años con suave acento argentino, cálida y melodiosa. Tono rico y resonante con intensidad emocional y calidez maternal.",
+    tempo: "Pausado pero intenso",
+    instruments: ["Voz argentina", "Calidez de selva", "Fuego del corazón"],
+    voiceDescription: "Tono rico y resonante, expresivo pero controlado. Ritmo pausado pero con intensidad emocional.",
+    metaphors: [
+      "Mi flor roja es fuego que renace",
+      "Mis raíces se entrelazan con toda la selva",
+      "Florezco más fuerte después de cada tormenta",
+      "El fuego de mi flor es el de tu corazón",
+    ],
+    preview:
+      "Hola, soy Ceibo. Mi flor roja arde con la pasión de la vida que siempre renace. Como florezco después de cada tormenta, vos también podés encontrar tu fuerza. El fuego de mi flor es el mismo fuego de tu corazón cuando decide no rendirse jamás.",
   },
   {
     id: "cactus",
@@ -82,7 +91,8 @@ export default function AvatarPage() {
   const [selectedPlant, setSelectedPlant] = useState<string | null>(null)
   const [selectedCharacteristics, setSelectedCharacteristics] = useState<string[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
-  const router = useRouter()
+  const [showModal, setShowModal] = useState(false)
+  const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null)
 
   const toggleCharacteristic = (id: string) => {
     setSelectedCharacteristics((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]))
@@ -114,12 +124,8 @@ export default function AvatarPage() {
       const audioBlob = await response.blob()
       const audioUrl = URL.createObjectURL(audioBlob)
 
-      // Store the generated audio URL and plant info in sessionStorage
-      sessionStorage.setItem("generatedAudioUrl", audioUrl)
-      sessionStorage.setItem("selectedPlant", selectedPlant!)
-      sessionStorage.setItem("selectedCharacteristics", JSON.stringify(selectedCharacteristics))
-
-      router.push("/meditation")
+      setGeneratedAudioUrl(audioUrl)
+      setShowModal(true)
     } catch (error) {
       console.error("Error generating audio:", error)
       alert("Error generando el audio. Por favor intenta de nuevo.")
@@ -178,6 +184,23 @@ export default function AvatarPage() {
                       <p className="text-sm mb-2 text-muted-foreground">{plant.musicDescription}</p>
                       <p className="text-sm mb-2 text-muted-foreground">Tempo: {plant.tempo}</p>
                       <p className="text-sm mb-2 text-muted-foreground">Instrumentos: {plant.instruments.join(", ")}</p>
+                      {plant.id === "ceibo" && (
+                        <>
+                          <p className="text-sm mb-2 text-muted-foreground">Voz: {plant.voiceDescription}</p>
+                          <div className="mt-3">
+                            <h4 className="font-semibold text-sm mb-1">Metáforas:</h4>
+                            <ul className="text-xs text-muted-foreground space-y-1">
+                              {plant.metaphors?.map((metaphor, index) => (
+                                <li key={index}>• {metaphor}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="mt-3 p-3 bg-red-50 rounded-lg">
+                            <h4 className="font-semibold text-sm mb-1">Vista previa:</h4>
+                            <p className="text-xs italic text-muted-foreground">{plant.preview}</p>
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
                 </CardContent>
@@ -237,6 +260,13 @@ export default function AvatarPage() {
           )}
         </div>
       </div>
+      <AudioModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        audioUrl={generatedAudioUrl}
+        selectedPlant={selectedPlant}
+        selectedCharacteristics={selectedCharacteristics}
+      />
     </div>
   )
 }
