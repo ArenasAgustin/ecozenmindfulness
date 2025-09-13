@@ -95,7 +95,18 @@ export default function AvatarPage() {
   const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null)
 
   const toggleCharacteristic = (id: string) => {
-    setSelectedCharacteristics((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]))
+    setSelectedCharacteristics((prev) => {
+      if (prev.includes(id)) {
+        // Remove if already selected
+        return prev.filter((c) => c !== id)
+      } else {
+        // Add only if less than 2 are selected
+        if (prev.length < 2) {
+          return [...prev, id]
+        }
+        return prev
+      }
+    })
   }
 
   const canProceed = selectedPlant && selectedCharacteristics.length > 0
@@ -213,7 +224,7 @@ export default function AvatarPage() {
         <div className="mb-12">
           <h2 className="font-heading text-2xl font-semibold mb-6">¿Cómo te sientes hoy?</h2>
           <p className="text-muted-foreground mb-6">
-            Selecciona una o más características que describan tu estado actual
+            Selecciona hasta 2 características que describan tu estado actual ({selectedCharacteristics.length}/2)
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {characteristics.map((char) => (
@@ -222,6 +233,7 @@ export default function AvatarPage() {
                 variant={selectedCharacteristics.includes(char.id) ? "default" : "outline"}
                 className="h-20 flex flex-col gap-2 rounded-2xl"
                 onClick={() => toggleCharacteristic(char.id)}
+                disabled={selectedCharacteristics.length >= 2 && !selectedCharacteristics.includes(char.id)}
               >
                 <span className="text-2xl">{char.icon}</span>
                 <span className="text-sm">{char.label}</span>
