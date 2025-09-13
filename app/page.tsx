@@ -35,10 +35,6 @@ export default function HomePage() {
                 Comenzar Viaje
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-6 rounded-full bg-transparent">
-              <Heart className="w-5 h-5 mr-2" />
-              Explorar
-            </Button>
           </div>
         </div>
 
