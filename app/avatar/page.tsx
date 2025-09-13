@@ -5,7 +5,6 @@ import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Play, Loader2, Info } from "lucide-react"
 import Link from "next/link"
 import AudioModal from "@/components/audio-modal"
@@ -202,39 +201,7 @@ export default function AvatarPage() {
                   <p className="text-sm text-muted-foreground">{plant.personality}</p>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm mb-4 text-pretty">{plant.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {plant.specialties.map((specialty) => (
-                      <Badge key={specialty} variant="secondary" className="text-xs">
-                        {specialty}
-                      </Badge>
-                    ))}
-                  </div>
-                  {selectedPlant === plant.id && (
-                    <div className="mt-4">
-                      <h3 className="font-heading text-lg font-semibold mb-2">Características Musicales</h3>
-                      <p className="text-sm mb-2 text-muted-foreground">{plant.musicDescription}</p>
-                      <p className="text-sm mb-2 text-muted-foreground">Tempo: {plant.tempo}</p>
-                      <p className="text-sm mb-2 text-muted-foreground">Instrumentos: {plant.instruments.join(", ")}</p>
-                      {plant.id === "ceibo" && (
-                        <>
-                          <p className="text-sm mb-2 text-muted-foreground">Voz: {plant.voiceDescription}</p>
-                          <div className="mt-3">
-                            <h4 className="font-semibold text-sm mb-1">Metáforas:</h4>
-                            <ul className="text-xs text-muted-foreground space-y-1">
-                              {plant.metaphors?.map((metaphor, index) => (
-                                <li key={index}>• {metaphor}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div className="mt-3 p-3 bg-red-50 rounded-lg">
-                            <h4 className="font-semibold text-sm mb-1">Vista previa:</h4>
-                            <p className="text-xs italic text-muted-foreground">{plant.preview}</p>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )}
+                  {/* Only show basic plant info, detailed characteristics are now only in the info modal */}
                 </CardContent>
               </Card>
             ))}
