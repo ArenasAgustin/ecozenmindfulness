@@ -225,7 +225,7 @@ export default function AvatarPage() {
           <p className="text-muted-foreground mb-6">
             Selecciona hasta 2 características que describan tu estado actual ({selectedCharacteristics.length}/2)
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {characteristics.map((char) => (
               <Button
                 key={char.id}
