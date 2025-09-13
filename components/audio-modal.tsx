@@ -38,7 +38,7 @@ const plants = {
     name: "Cactus Resistente",
     image: "/desert-cactus-bloom.jpg",
     personality: "Sobrio y resistente",
-    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bamb_Resiliente_2025-09-13T185553-TVF8bJeugzyl2lp1ppadoMpSWE4UBA.mp3", // Using bambu audio as default for cactus
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Espritu_del_Cactus_2025-09-13T192044-F1qscUn3CoNa1viCXHfS7aQuv5B9Wq.mp3", // Now using specific cactus audio instead of bamboo audio
   },
 }
 
