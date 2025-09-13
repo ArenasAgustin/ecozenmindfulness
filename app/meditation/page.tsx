@@ -7,36 +7,65 @@ import { Slider } from "@/components/ui/slider"
 import { Play, Pause, RotateCcw, ArrowLeft, Volume2 } from "lucide-react"
 import Link from "next/link"
 
-const meditationSessions = [
-  {
-    id: "breathing",
-    title: "Respiración Consciente",
-    duration: 300, // 5 minutes
-    description: "Una sesión suave de respiración guiada para calmar la mente",
-    audioUrl: "/placeholder-audio.mp3", // Placeholder audio
+const plants = {
+  bamboo: {
+    name: "Bambú Resiliente",
+    image: "/bamboo-forest-zen.jpg",
+    personality: "Flexible y adaptable",
   },
-  {
-    id: "nature",
-    title: "Conexión con la Naturaleza",
-    duration: 600, // 10 minutes
-    description: "Visualización guiada en un jardín sereno",
-    audioUrl: "/placeholder-audio.mp3",
+  lotus: {
+    name: "Loto Purificador",
+    image: "/lotus-tranquil-water.jpg",
+    personality: "Puro y renovador",
   },
-  {
-    id: "stress",
-    title: "Liberación del Estrés",
-    duration: 480, // 8 minutes
-    description: "Técnicas para soltar tensiones y encontrar paz",
-    audioUrl: "/placeholder-audio.mp3",
+  pine: {
+    name: "Pino Enraizado",
+    image: "/mountain-pine-forest.jpg",
+    personality: "Estable y protector",
   },
-]
+  cactus: {
+    name: "Cactus Resistente",
+    image: "/desert-cactus-bloom.jpg",
+    personality: "Sobrio y resistente",
+  },
+}
+
+const characteristicLabels = {
+  child: "Niño/a",
+  stressed: "Estresado/a",
+  sad: "Triste",
+  pregnant: "Embarazada",
+  anxious: "Ansioso/a",
+  tired: "Cansado/a",
+  angry: "Enojado/a",
+  confused: "Confundido/a",
+}
 
 export default function MeditationPage() {
-  const [selectedSession, setSelectedSession] = useState(meditationSessions[0])
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState([80])
+  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const [selectedPlant, setSelectedPlant] = useState<string | null>(null)
+  const [selectedCharacteristics, setSelectedCharacteristics] = useState<string[]>([])
   const audioRef = useRef<HTMLAudioElement>(null)
+
+  useEffect(() => {
+    const generatedAudioUrl = sessionStorage.getItem("generatedAudioUrl")
+    const plantId = sessionStorage.getItem("selectedPlant")
+    const characteristics = sessionStorage.getItem("selectedCharacteristics")
+
+    if (generatedAudioUrl) {
+      setAudioUrl(generatedAudioUrl)
+    }
+    if (plantId) {
+      setSelectedPlant(plantId)
+    }
+    if (characteristics) {
+      setSelectedCharacteristics(JSON.parse(characteristics))
+    }
+  }, [])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -44,15 +73,18 @@ export default function MeditationPage() {
 
     const updateTime = () => setCurrentTime(audio.currentTime)
     const handleEnded = () => setIsPlaying(false)
+    const handleLoadedMetadata = () => setDuration(audio.duration)
 
     audio.addEventListener("timeupdate", updateTime)
     audio.addEventListener("ended", handleEnded)
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata)
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime)
       audio.removeEventListener("ended", handleEnded)
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata)
     }
-  }, [selectedSession])
+  }, [audioUrl])
 
   const togglePlayPause = () => {
     const audio = audioRef.current
@@ -88,6 +120,11 @@ export default function MeditationPage() {
     }
   }
 
+  const currentPlant = selectedPlant ? plants[selectedPlant as keyof typeof plants] : null
+  const characteristicNames = selectedCharacteristics
+    .map((char) => characteristicLabels[char as keyof typeof characteristicLabels])
+    .join(", ")
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       <div className="container mx-auto px-4 py-8">
@@ -102,107 +139,111 @@ export default function MeditationPage() {
           <h1 className="font-heading text-4xl font-bold text-foreground">Sesión de Mindfulness</h1>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Session Selection */}
-          <div className="lg:col-span-1">
-            <h2 className="font-heading text-2xl font-semibold mb-6">Elige tu sesión</h2>
-            <div className="space-y-4">
-              {meditationSessions.map((session) => (
-                <Card
-                  key={session.id}
-                  className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                    selectedSession.id === session.id ? "ring-2 ring-primary shadow-lg" : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedSession(session)
-                    resetAudio()
-                  }}
-                >
-                  <CardHeader className="pb-3">
-                    <CardTitle className="font-heading text-lg">{session.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{formatTime(session.duration)}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-pretty">{session.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
+        <div className="max-w-4xl mx-auto">
           {/* Audio Player */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-xl">
-              <CardHeader className="text-center">
-                <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center">
-                  <img src="/peaceful-sage-plant-meditating.jpg" alt="Planta meditando" className="w-24 h-24 rounded-full" />
-                </div>
-                <CardTitle className="font-heading text-3xl mb-2">{selectedSession.title}</CardTitle>
-                <p className="text-muted-foreground text-pretty">{selectedSession.description}</p>
-              </CardHeader>
+          <Card className="shadow-xl">
+            <CardHeader className="text-center">
+              <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center overflow-hidden">
+                {currentPlant ? (
+                  <img
+                    src={currentPlant.image || "/placeholder.svg"}
+                    alt={currentPlant.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img src="/peaceful-plant-meditation.jpg" alt="Planta meditando" className="w-24 h-24 rounded-full" />
+                )}
+              </div>
+              <CardTitle className="font-heading text-3xl mb-2">
+                {currentPlant ? currentPlant.name : "Sesión Personalizada"}
+              </CardTitle>
+              <p className="text-muted-foreground text-pretty mb-2">
+                {currentPlant ? currentPlant.personality : "Tu sesión de mindfulness personalizada"}
+              </p>
+              {characteristicNames && (
+                <p className="text-sm text-muted-foreground">Adaptado para: {characteristicNames}</p>
+              )}
+            </CardHeader>
 
-              <CardContent className="space-y-8">
-                {/* Progress Bar */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{formatTime(selectedSession.duration)}</span>
-                  </div>
-                  <div className="w-full bg-secondary rounded-full h-2">
-                    <div
-                      className="bg-primary h-2 rounded-full transition-all duration-300"
-                      style={{
-                        width: `${(currentTime / selectedSession.duration) * 100}%`,
-                      }}
+            <CardContent className="space-y-8">
+              {/* Progress Bar */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+                <div className="w-full bg-secondary rounded-full h-2">
+                  <div
+                    className="bg-primary h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: duration > 0 ? `${(currentTime / duration) * 100}%` : "0%",
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Controls */}
+              <div className="flex items-center justify-center gap-6">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="rounded-full w-14 h-14 bg-transparent"
+                  onClick={resetAudio}
+                  disabled={!audioUrl}
+                >
+                  <RotateCcw className="w-6 h-6" />
+                </Button>
+
+                <Button
+                  size="lg"
+                  className="rounded-full w-20 h-20 shadow-lg"
+                  onClick={togglePlayPause}
+                  disabled={!audioUrl}
+                >
+                  {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
+                </Button>
+
+                <div className="flex items-center gap-3">
+                  <Volume2 className="w-5 h-5 text-muted-foreground" />
+                  <div className="w-20">
+                    <Slider
+                      value={volume}
+                      onValueChange={handleVolumeChange}
+                      max={100}
+                      step={1}
+                      className="cursor-pointer"
                     />
                   </div>
                 </div>
+              </div>
 
-                {/* Controls */}
-                <div className="flex items-center justify-center gap-6">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full w-14 h-14 bg-transparent"
-                    onClick={resetAudio}
-                  >
-                    <RotateCcw className="w-6 h-6" />
-                  </Button>
+              {/* Status Message */}
+              {!audioUrl && (
+                <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-0">
+                  <CardContent className="p-6 text-center">
+                    <p className="text-muted-foreground">
+                      No hay audio generado. Regresa a la selección de avatar para crear tu sesión personalizada.
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
 
-                  <Button size="lg" className="rounded-full w-20 h-20 shadow-lg" onClick={togglePlayPause}>
-                    {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
-                  </Button>
-
-                  <div className="flex items-center gap-3">
-                    <Volume2 className="w-5 h-5 text-muted-foreground" />
-                    <div className="w-20">
-                      <Slider
-                        value={volume}
-                        onValueChange={handleVolumeChange}
-                        max={100}
-                        step={1}
-                        className="cursor-pointer"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Meditation Quote */}
+              {/* Meditation Quote */}
+              {currentPlant && (
                 <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-0">
                   <CardContent className="p-6 text-center">
                     <p className="font-heading text-lg italic text-pretty">
                       "Como las plantas crecen hacia la luz, tu mente puede crecer hacia la paz."
                     </p>
-                    <p className="text-sm text-muted-foreground mt-2">- Salvia Sabia</p>
+                    <p className="text-sm text-muted-foreground mt-2">- {currentPlant.name}</p>
                   </CardContent>
                 </Card>
-              </CardContent>
-            </Card>
-          </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Hidden Audio Element */}
-        <audio ref={audioRef} src={selectedSession.audioUrl} preload="metadata" />
+        {audioUrl && <audio ref={audioRef} src={audioUrl} preload="metadata" />}
       </div>
     </div>
   )

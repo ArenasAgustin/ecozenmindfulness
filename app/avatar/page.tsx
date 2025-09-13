@@ -4,45 +4,66 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Play } from "lucide-react"
+import { ArrowLeft, Play, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 const plants = [
   {
-    id: "sage",
-    name: "Salvia Sabia",
-    image: "/wise-sage-plant-with-gentle-eyes.jpg",
-    personality: "Sabia y tranquila",
-    specialties: ["Ansiedad", "Estrés laboral", "Insomnio"],
-    description: "Una planta ancestral que ha visto muchas estaciones. Su voz es suave y sus consejos profundos.",
-    color: "bg-green-100 border-green-300",
-  },
-  {
-    id: "sunflower",
-    name: "Girasol Alegre",
-    image: "/happy-sunflower-with-bright-smile.jpg",
-    personality: "Optimista y energética",
-    specialties: ["Tristeza", "Depresión", "Baja autoestima"],
-    description: "Siempre mira hacia el sol y te ayudará a encontrar la luz en los momentos oscuros.",
-    color: "bg-yellow-100 border-yellow-300",
-  },
-  {
-    id: "lavender",
-    name: "Lavanda Serena",
-    image: "/peaceful-lavender-plant-with-calming-aura.jpg",
-    personality: "Calmada y maternal",
-    specialties: ["Embarazo", "Maternidad", "Relajación"],
-    description: "Su aroma imaginario te tranquiliza. Perfecta para momentos de transición y cuidado personal.",
-    color: "bg-purple-100 border-purple-300",
-  },
-  {
     id: "bamboo",
     name: "Bambú Resiliente",
-    image: "/strong-bamboo-plant-with-determined-expression.jpg",
-    personality: "Fuerte y adaptable",
-    specialties: ["Cambios de vida", "Fortaleza", "Crecimiento"],
-    description: "Flexible pero inquebrantable. Te enseñará a doblarte sin romperte ante las adversidades.",
+    image: "/bamboo-forest-zen.jpg",
+    personality: "Flexible y adaptable",
+    specialties: ["Cambios de vida", "Resiliencia", "Crecimiento personal"],
+    description:
+      "Evoca bosques de bambú asiáticos con flauta shakuhachi y cuencos tibetanos. Te enseña a doblarte sin romperte, creciendo con serenidad y fortaleza.",
     color: "bg-emerald-100 border-emerald-300",
+    musicDescription:
+      "8-12 minutos de sonidos de viento entre cañas, agua corriendo y melodías de flauta japonesa que evocan crecimiento y flexibilidad.",
+    tempo: "60-70 BPM",
+    instruments: ["Flauta shakuhachi", "Cuencos tibetanos", "Chimes de bambú"],
+  },
+  {
+    id: "lotus",
+    name: "Loto Purificador",
+    image: "/lotus-tranquil-water.jpg",
+    personality: "Puro y renovador",
+    specialties: ["Renacimiento", "Pureza mental", "Calma profunda"],
+    description:
+      "Soundscape de aguas tranquilas con arpa y piano minimalista. Como la flor que emerge del lodo, te ayuda a encontrar claridad y renovación.",
+    color: "bg-pink-100 border-pink-300",
+    musicDescription:
+      "10-15 minutos de arpeggios como gotas, notas espaciadas de piano y campanas de cristal que evocan el florecimiento gradual.",
+    tempo: "45-55 BPM",
+    instruments: ["Arpa ligera", "Piano minimalista", "Campanas de agua"],
+  },
+  {
+    id: "pine",
+    name: "Pino Enraizado",
+    image: "/mountain-pine-forest.jpg",
+    personality: "Estable y protector",
+    specialties: ["Estabilidad", "Fortaleza interior", "Conexión con la tierra"],
+    description:
+      "Ambiente de bosque de montaña con violonchelo y flauta de madera. Te conecta con tu fuerza interior y raíces profundas.",
+    color: "bg-green-100 border-green-300",
+    musicDescription:
+      "8-12 minutos de drones graves, viento en pinos y melodías que transmiten estabilidad y arraigo profundo.",
+    tempo: "50-60 BPM",
+    instruments: ["Violonchelo pizzicato", "Contrabajo", "Flauta de madera"],
+  },
+  {
+    id: "cactus",
+    name: "Cactus Resistente",
+    image: "/desert-cactus-bloom.jpg",
+    personality: "Sobrio y resistente",
+    specialties: ["Resistencia", "Energía contenida", "Supervivencia"],
+    description:
+      "Paisaje sonoro desértico con guitarra fingerpicking y handpan. Te enseña la belleza de la resistencia silenciosa y el florecimiento interno.",
+    color: "bg-orange-100 border-orange-300",
+    musicDescription:
+      "8-10 minutos de patrones geométricos de guitarra, resonancia metálica cálida y silencios espaciosos del desierto.",
+    tempo: "65-75 BPM",
+    instruments: ["Guitarra acústica", "Handpan", "Shakers sutiles"],
   },
 ]
 
@@ -60,12 +81,52 @@ const characteristics = [
 export default function AvatarPage() {
   const [selectedPlant, setSelectedPlant] = useState<string | null>(null)
   const [selectedCharacteristics, setSelectedCharacteristics] = useState<string[]>([])
+  const [isGenerating, setIsGenerating] = useState(false)
+  const router = useRouter()
 
   const toggleCharacteristic = (id: string) => {
     setSelectedCharacteristics((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]))
   }
 
   const canProceed = selectedPlant && selectedCharacteristics.length > 0
+
+  const handleStartMeditation = async () => {
+    if (!canProceed) return
+
+    setIsGenerating(true)
+
+    try {
+      const response = await fetch("/api/generate-audio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          plant: selectedPlant,
+          characteristics: selectedCharacteristics,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to generate audio")
+      }
+
+      const audioBlob = await response.blob()
+      const audioUrl = URL.createObjectURL(audioBlob)
+
+      // Store the generated audio URL and plant info in sessionStorage
+      sessionStorage.setItem("generatedAudioUrl", audioUrl)
+      sessionStorage.setItem("selectedPlant", selectedPlant!)
+      sessionStorage.setItem("selectedCharacteristics", JSON.stringify(selectedCharacteristics))
+
+      router.push("/meditation")
+    } catch (error) {
+      console.error("Error generating audio:", error)
+      alert("Error generando el audio. Por favor intenta de nuevo.")
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
@@ -111,6 +172,14 @@ export default function AvatarPage() {
                       </Badge>
                     ))}
                   </div>
+                  {selectedPlant === plant.id && (
+                    <div className="mt-4">
+                      <h3 className="font-heading text-lg font-semibold mb-2">Características Musicales</h3>
+                      <p className="text-sm mb-2 text-muted-foreground">{plant.musicDescription}</p>
+                      <p className="text-sm mb-2 text-muted-foreground">Tempo: {plant.tempo}</p>
+                      <p className="text-sm mb-2 text-muted-foreground">Instrumentos: {plant.instruments.join(", ")}</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -140,16 +209,31 @@ export default function AvatarPage() {
 
         {/* Action Button */}
         <div className="text-center">
-          <Link href={canProceed ? "/meditation" : "#"}>
-            <Button size="lg" className="text-lg px-12 py-6 rounded-full shadow-lg" disabled={!canProceed}>
-              <Play className="w-5 h-5 mr-2" />
-              Comenzar Sesión de Mindfulness
-            </Button>
-          </Link>
+          <Button
+            size="lg"
+            className="text-lg px-12 py-6 rounded-full shadow-lg"
+            disabled={!canProceed || isGenerating}
+            onClick={handleStartMeditation}
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Generando Audio Personalizado...
+              </>
+            ) : (
+              <>
+                <Play className="w-5 h-5 mr-2" />
+                Comenzar Sesión de Mindfulness
+              </>
+            )}
+          </Button>
           {!canProceed && (
             <p className="text-sm text-muted-foreground mt-4">
               Selecciona una planta y al menos una característica para continuar
             </p>
+          )}
+          {isGenerating && (
+            <p className="text-sm text-muted-foreground mt-4">Creando tu sesión personalizada con ElevenLabs...</p>
           )}
         </div>
       </div>
