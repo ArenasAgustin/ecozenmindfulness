@@ -3,6 +3,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { X } from "lucide-react"
 import { useEffect } from "react"
 
 interface Plant {
@@ -46,14 +48,19 @@ export default function PlantInfoModal({ isOpen, onClose, plant }: PlantInfoModa
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl h-[85vh] flex flex-col">
         <DialogHeader className="flex-shrink-0">
-          <DialogTitle className="font-heading text-2xl flex items-center gap-4">
-            <img
-              src={plant.image || "/placeholder.svg"}
-              alt={plant.name}
-              className="w-16 h-16 rounded-full object-cover"
-            />
-            {plant.name}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="font-heading text-2xl flex items-center gap-4">
+              <img
+                src={plant.image || "/placeholder.svg"}
+                alt={plant.name}
+                className="w-16 h-16 rounded-full object-cover"
+              />
+              {plant.name}
+            </DialogTitle>
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">

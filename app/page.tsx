@@ -13,8 +13,7 @@ export default function HomePage() {
         <div className="text-center mb-16">
           <div className="flex justify-center mb-6 opacity-0 animate-fade-in-scale">
             <div className="relative">
-              <Leaf className="w-20 h-20 text-primary" />
-              <Sparkles className="w-8 h-8 text-accent absolute -top-2 -right-2" />
+              <img src="/logo.png" alt="Mindfulness Botánica Logo" className="w-24 h-24 object-contain" />
             </div>
           </div>
 
