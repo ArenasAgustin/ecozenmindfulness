@@ -126,6 +126,7 @@ export default function AvatarPage() {
     if (!canProceed) return
 
     setIsGenerating(true)
+    setShowModal(true)
 
     try {
       const response = await fetch("/api/generate-audio", {
@@ -147,10 +148,10 @@ export default function AvatarPage() {
       const audioUrl = URL.createObjectURL(audioBlob)
 
       setGeneratedAudioUrl(audioUrl)
-      setShowModal(true)
     } catch (error) {
       console.error("Error generating audio:", error)
       alert("Error generando el audio. Por favor intenta de nuevo.")
+      setShowModal(false)
     } finally {
       setIsGenerating(false)
     }
@@ -298,6 +299,7 @@ export default function AvatarPage() {
         audioUrl={generatedAudioUrl}
         selectedPlant={selectedPlant}
         selectedCharacteristics={selectedCharacteristics}
+        isLoading={isGenerating} // Pass loading state to modal
       />
       <PlantInfoModal isOpen={showPlantInfo} onClose={() => setShowPlantInfo(false)} plant={selectedPlantInfo} />
     </div>

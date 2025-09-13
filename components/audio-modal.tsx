@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
-import { Play, Pause, RotateCcw, Volume2, X } from "lucide-react"
+import { Play, Pause, RotateCcw, Volume2, X, Loader2 } from "lucide-react"
 
 interface AudioModalProps {
   isOpen: boolean
@@ -12,6 +12,7 @@ interface AudioModalProps {
   audioUrl: string | null
   selectedPlant: string | null
   selectedCharacteristics: string[]
+  isLoading?: boolean // Added loading prop
 }
 
 const plants = {
@@ -19,21 +20,25 @@ const plants = {
     name: "Bambú Resiliente",
     image: "/bamboo-forest-zen.jpg",
     personality: "Flexible y adaptable",
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bamb_Resiliente_2025-09-13T185553-TVF8bJeugzyl2lp1ppadoMpSWE4UBA.mp3", // Added background audio for bamboo
   },
   lotus: {
     name: "Loto Purificador",
     image: "/lotus-tranquil-water.jpg",
     personality: "Puro y renovador",
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Loto_Sereno_2025-09-13T190200-wrnxL1jLIssLaoQ3LckGLMZP8TASWD.mp3", // Added background audio for lotus
   },
   ceibo: {
     name: "Ceibo Renaciente",
     image: "/ceibo-red-flower.jpg",
     personality: "Apasionado y resiliente",
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Loto_Sereno_2025-09-13T190200-wrnxL1jLIssLaoQ3LckGLMZP8TASWD.mp3", // Using loto audio as default for ceibo
   },
   cactus: {
     name: "Cactus Resistente",
     image: "/desert-cactus-bloom.jpg",
     personality: "Sobrio y resistente",
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bamb_Resiliente_2025-09-13T185553-TVF8bJeugzyl2lp1ppadoMpSWE4UBA.mp3", // Using bambu audio as default for cactus
   },
 }
 
@@ -54,12 +59,14 @@ export default function AudioModal({
   audioUrl,
   selectedPlant,
   selectedCharacteristics,
+  isLoading = false, // Added loading prop with default value
 }: AudioModalProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState([80])
   const audioRef = useRef<HTMLAudioElement>(null)
+  const backgroundAudioRef = useRef<HTMLAudioElement>(null) // Added ref for background audio
 
   useEffect(() => {
     const audio = audioRef.current
@@ -88,6 +95,10 @@ export default function AudioModal({
         audioRef.current.pause()
         audioRef.current.currentTime = 0
       }
+      if (backgroundAudioRef.current) {
+        backgroundAudioRef.current.pause()
+        backgroundAudioRef.current.currentTime = 0
+      }
     }
   }, [isOpen])
 
@@ -105,23 +116,35 @@ export default function AudioModal({
 
   const togglePlayPause = () => {
     const audio = audioRef.current
+    const backgroundAudio = backgroundAudioRef.current
     if (!audio) return
 
     if (isPlaying) {
       audio.pause()
+      if (backgroundAudio) {
+        backgroundAudio.pause()
+      }
     } else {
       audio.play()
+      if (backgroundAudio) {
+        backgroundAudio.play()
+      }
     }
     setIsPlaying(!isPlaying)
   }
 
   const resetAudio = () => {
     const audio = audioRef.current
+    const backgroundAudio = backgroundAudioRef.current
     if (!audio) return
 
     audio.currentTime = 0
     setCurrentTime(0)
     setIsPlaying(false)
+    if (backgroundAudio) {
+      backgroundAudio.currentTime = 0
+      backgroundAudio.pause()
+    }
   }
 
   const formatTime = (seconds: number) => {
@@ -134,6 +157,9 @@ export default function AudioModal({
     setVolume(value)
     if (audioRef.current) {
       audioRef.current.volume = value[0] / 100
+    }
+    if (backgroundAudioRef.current) {
+      backgroundAudioRef.current.volume = (value[0] / 100) * 0.3
     }
   }
 
@@ -180,69 +206,89 @@ export default function AudioModal({
             </CardHeader>
 
             <CardContent className="space-y-6">
-              {/* Progress Bar */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>{formatTime(currentTime)}</span>
-                  <span>{formatTime(duration)}</span>
-                </div>
-                <div className="w-full bg-secondary rounded-full h-2">
-                  <div
-                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                    style={{
-                      width: duration > 0 ? `${(currentTime / duration) * 100}%` : "0%",
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Controls */}
-              <div className="flex items-center justify-center gap-6">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="rounded-full w-12 h-12 bg-transparent"
-                  onClick={resetAudio}
-                  disabled={!audioUrl}
-                >
-                  <RotateCcw className="w-5 h-5" />
-                </Button>
-
-                <Button
-                  size="lg"
-                  className="rounded-full w-16 h-16 shadow-lg"
-                  onClick={togglePlayPause}
-                  disabled={!audioUrl}
-                >
-                  {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
-                </Button>
-
-                <div className="flex items-center gap-3">
-                  <Volume2 className="w-4 h-4 text-muted-foreground" />
-                  <div className="w-16">
-                    <Slider
-                      value={volume}
-                      onValueChange={handleVolumeChange}
-                      max={100}
-                      step={1}
-                      className="cursor-pointer"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Status Message */}
-              {!audioUrl && (
-                <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-0">
-                  <CardContent className="p-4 text-center">
-                    <p className="text-muted-foreground text-sm">
-                      No hay audio generado. Intenta generar una nueva sesión.
-                    </p>
+              {isLoading && (
+                <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-0">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                      <div className="space-y-2">
+                        <p className="font-heading text-lg">Generando tu sesión personalizada...</p>
+                        <p className="text-sm text-muted-foreground">
+                          Creando contenido único con OpenRouter y ElevenLabs
+                        </p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               )}
 
-              {/* Meditation Quote */}
+              {!isLoading && (
+                <>
+                  {/* Progress Bar */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{formatTime(duration)}</span>
+                    </div>
+                    <div className="w-full bg-secondary rounded-full h-2">
+                      <div
+                        className="bg-primary h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: duration > 0 ? `${(currentTime / duration) * 100}%` : "0%",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Controls */}
+                  <div className="flex items-center justify-center gap-6">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded-full w-12 h-12 bg-transparent"
+                      onClick={resetAudio}
+                      disabled={!audioUrl}
+                    >
+                      <RotateCcw className="w-5 h-5" />
+                    </Button>
+
+                    <Button
+                      size="lg"
+                      className="rounded-full w-16 h-16 shadow-lg"
+                      onClick={togglePlayPause}
+                      disabled={!audioUrl}
+                    >
+                      {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
+                    </Button>
+
+                    <div className="flex items-center gap-3">
+                      <Volume2 className="w-4 h-4 text-muted-foreground" />
+                      <div className="w-16">
+                        <Slider
+                          value={volume}
+                          onValueChange={handleVolumeChange}
+                          max={100}
+                          step={1}
+                          className="cursor-pointer"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status Message */}
+                  {!audioUrl && (
+                    <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-0">
+                      <CardContent className="p-4 text-center">
+                        <p className="text-muted-foreground text-sm">
+                          No hay audio generado. Intenta generar una nueva sesión.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </>
+              )}
+
+              {/* Meditation Quote - Show always */}
               {currentPlant && (
                 <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-0">
                   <CardContent className="p-4 text-center">
@@ -258,6 +304,7 @@ export default function AudioModal({
         </div>
 
         {audioUrl && <audio ref={audioRef} src={audioUrl} preload="metadata" />}
+        {currentPlant && <audio ref={backgroundAudioRef} src={currentPlant.backgroundAudio} preload="metadata" loop />}
       </div>
     </div>
   )
