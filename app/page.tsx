@@ -11,24 +11,24 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-6 opacity-0 animate-fade-in-scale">
             <div className="relative">
               <Leaf className="w-20 h-20 text-primary" />
               <Sparkles className="w-8 h-8 text-accent absolute -top-2 -right-2" />
             </div>
           </div>
 
-          <h1 className="font-heading text-6xl md:text-7xl font-bold text-foreground mb-6 text-balance">
+          <h1 className="font-heading text-6xl md:text-7xl font-bold text-foreground mb-6 text-balance opacity-0 animate-fade-in-up delay-200">
             Mindfulness
             <span className="text-primary block">Botánica</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty opacity-0 animate-fade-in-up delay-400">
             Conecta con la naturaleza a través de plantas que hablan. Encuentra paz interior con tu compañero botánico
             personalizado.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in-up delay-500">
             <Link href="/avatar">
               <Button size="lg" className="text-lg px-8 py-6 rounded-full">
                 <Leaf className="w-5 h-5 mr-2" />
@@ -40,7 +40,7 @@ export default function HomePage() {
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
+          <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm opacity-0 animate-fade-in-up delay-600">
             <CardContent className="p-8 text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Brain className="w-8 h-8 text-primary" />
@@ -52,7 +52,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
+          <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm opacity-0 animate-fade-in-up delay-700">
             <CardContent className="p-8 text-center">
               <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Leaf className="w-8 h-8 text-accent" />
@@ -64,7 +64,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
+          <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm opacity-0 animate-fade-in-up delay-800">
             <CardContent className="p-8 text-center">
               <div className="w-16 h-16 bg-secondary/30 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Heart className="w-8 h-8 text-primary" />
@@ -78,7 +78,7 @@ export default function HomePage() {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center">
+        <div className="text-center opacity-0 animate-fade-in-scale delay-1000">
           <Card className="border-0 shadow-xl bg-gradient-to-r from-primary/5 to-accent/5 backdrop-blur-sm">
             <CardContent className="p-12">
               <h2 className="font-heading text-4xl font-bold mb-6 text-balance">Tu Jardín Interior Te Espera</h2>
