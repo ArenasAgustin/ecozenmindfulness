@@ -12,7 +12,7 @@ interface AudioModalProps {
   audioUrl: string | null
   selectedPlant: string | null
   selectedCharacteristics: string[]
-  isLoading?: boolean // Added loading prop
+  isLoading?: boolean
 }
 
 const plants = {
@@ -20,25 +20,25 @@ const plants = {
     name: "Bambú Resiliente",
     image: "/bamboo-forest-zen.jpg",
     personality: "Flexible y adaptable",
-    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bamb_Resiliente_2025-09-13T185553-TVF8bJeugzyl2lp1ppadoMpSWE4UBA.mp3", // Added background audio for bamboo
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bamb_Resiliente_2025-09-13T185553-TVF8bJeugzyl2lp1ppadoMpSWE4UBA.mp3",
   },
   lotus: {
     name: "Loto Purificador",
     image: "/lotus-tranquil-water.jpg",
     personality: "Puro y renovador",
-    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Loto_Sereno_2025-09-13T190200-wrnxL1jLIssLaoQ3LckGLMZP8TASWD.mp3", // Added background audio for lotus
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Loto_Sereno_2025-09-13T190200-wrnxL1jLIssLaoQ3LckGLMZP8TASWD.mp3",
   },
   ceibo: {
     name: "Ceibo Renaciente",
     image: "/ceibo-red-flower.jpg",
     personality: "Apasionado y resiliente",
-    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Races_del_Ceibo_2025-09-13T193715-QVXVQTYGZVtHxqQMNSgpfEUFKTYGQa.mp3", // Updated ceibo to use its own specific background audio
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Races_del_Ceibo_2025-09-13T193715-QVXVQTYGZVtHxqQMNSgpfEUFKTYGQa.mp3",
   },
   cactus: {
     name: "Cactus Resistente",
     image: "/desert-cactus-bloom.jpg",
     personality: "Sobrio y resistente",
-    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Espritu_del_Cactus_2025-09-13T192044-F1qscUn3CoNa1viCXHfS7aQuv5B9Wq.mp3", // Now using specific cactus audio instead of bamboo audio
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Espritu_del_Cactus_2025-09-13T192044-F1qscUn3CoNa1viCXHfS7aQuv5B9Wq.mp3",
   },
 }
 
@@ -59,14 +59,27 @@ export default function AudioModal({
   audioUrl,
   selectedPlant,
   selectedCharacteristics,
-  isLoading = false, // Added loading prop with default value
+  isLoading = false,
 }: AudioModalProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState([80])
   const audioRef = useRef<HTMLAudioElement>(null)
-  const backgroundAudioRef = useRef<HTMLAudioElement>(null) // Added ref for background audio
+  const backgroundAudioRef = useRef<HTMLAudioElement>(null)
+
+  useEffect(() => {
+    if (backgroundAudioRef.current) {
+      if (isLoading) {
+        // Lower volume during loading
+        backgroundAudioRef.current.volume = (volume[0] / 100) * 0.1
+        backgroundAudioRef.current.play()
+      } else {
+        // Normal volume when not loading
+        backgroundAudioRef.current.volume = (volume[0] / 100) * 0.3
+      }
+    }
+  }, [isLoading, volume])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -160,7 +173,13 @@ export default function AudioModal({
       audioRef.current.volume = value[0] / 100
     }
     if (backgroundAudioRef.current) {
-      backgroundAudioRef.current.volume = (value[0] / 100) * 0.3
+      if (isLoading) {
+        // Lower volume during loading
+        backgroundAudioRef.current.volume = (value[0] / 100) * 0.1
+      } else {
+        // Normal background volume
+        backgroundAudioRef.current.volume = (value[0] / 100) * 0.3
+      }
     }
   }
 

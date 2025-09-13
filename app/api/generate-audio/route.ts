@@ -96,7 +96,7 @@ Metáforas que puedes usar: ${selectedPlant.metaphors.join(", ")}
 Características de la persona: ${characteristics.join(", ")}
 Instrucciones especiales: ${characteristicPrompts}
 
-Crea una sesión de mindfulness de 1-2 minutos que incluya:
+Crea una sesión de mindfulness de 30-40 segundos que incluya:
 1. Saludo cálido presentándote como ${selectedPlant.name}
 2. Técnica de respiración específica para las características mencionadas
 3. Visualización usando tus metáforas naturales
