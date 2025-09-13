@@ -70,7 +70,7 @@ export default function AudioModal({
 
   useEffect(() => {
     if (backgroundAudioRef.current && isLoading) {
-      backgroundAudioRef.current.volume = (volume[0] / 100) * 0.1
+      backgroundAudioRef.current.volume = volume[0] / 100
       backgroundAudioRef.current.play()
     }
   }, [isLoading])
@@ -179,8 +179,7 @@ export default function AudioModal({
     }
     if (backgroundAudioRef.current) {
       if (isLoading) {
-        // Lower volume during loading
-        backgroundAudioRef.current.volume = (value[0] / 100) * 0.1
+        backgroundAudioRef.current.volume = value[0] / 100
       } else {
         // Normal background volume
         backgroundAudioRef.current.volume = (value[0] / 100) * 0.3
@@ -197,7 +196,7 @@ export default function AudioModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-in fade-in-0 duration-500">
-      <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full animate-in zoom-in-95 slide-in-from-bottom-4 duration-500">
+      <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full max-h-screen overflow-y-auto animate-in zoom-in-95 slide-in-from-bottom-4 duration-500">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="font-heading text-2xl font-bold">Sesión de Mindfulness</h2>
           <Button variant="ghost" size="sm" onClick={onClose}>

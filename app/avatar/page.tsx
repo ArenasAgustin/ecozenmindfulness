@@ -79,10 +79,8 @@ const plants = [
 ]
 
 const characteristics = [
-  { id: "child", label: "Niño/a", icon: "🧒" },
   { id: "stressed", label: "Estresado/a", icon: "😰" },
   { id: "sad", label: "Triste", icon: "😢" },
-  { id: "pregnant", label: "Embarazada", icon: "🤱" },
   { id: "anxious", label: "Ansioso/a", icon: "😟" },
   { id: "tired", label: "Cansado/a", icon: "😴" },
   { id: "angry", label: "Enojado/a", icon: "😠" },
@@ -97,6 +95,8 @@ export default function AvatarPage() {
   const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null)
   const [showPlantInfo, setShowPlantInfo] = useState(false)
   const [selectedPlantInfo, setSelectedPlantInfo] = useState<any>(null)
+  const [showPlantError, setShowPlantError] = useState(false)
+  const [showCharacteristicError, setShowCharacteristicError] = useState(false)
 
   const toggleCharacteristic = (id: string) => {
     setSelectedCharacteristics((prev) => {
@@ -122,7 +122,17 @@ export default function AvatarPage() {
   const canProceed = selectedPlant && selectedCharacteristics.length > 0
 
   const handleStartMeditation = async () => {
-    if (!canProceed) return
+    if (!selectedPlant) {
+      setShowPlantError(true)
+      setTimeout(() => setShowPlantError(false), 3000) // Hide error after 3 seconds
+      return
+    }
+
+    if (selectedCharacteristics.length === 0) {
+      setShowCharacteristicError(true)
+      setTimeout(() => setShowCharacteristicError(false), 3000) // Hide error after 3 seconds
+      return
+    }
 
     setIsGenerating(true)
     setShowModal(true)
@@ -214,7 +224,7 @@ export default function AvatarPage() {
           <p className="text-muted-foreground mb-6">
             Selecciona hasta 2 características que describan tu estado actual ({selectedCharacteristics.length}/2)
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {characteristics.map((char) => (
               <Button
                 key={char.id}
@@ -235,7 +245,7 @@ export default function AvatarPage() {
           <Button
             size="lg"
             className="text-lg px-12 py-6 rounded-full shadow-lg"
-            disabled={!canProceed || isGenerating}
+            disabled={isGenerating}
             onClick={handleStartMeditation}
           >
             {isGenerating ? (
@@ -260,6 +270,20 @@ export default function AvatarPage() {
           )}
         </div>
       </div>
+
+      {/* Error Notifications */}
+      {showPlantError && (
+        <div className="fixed bottom-4 left-4 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg animate-in slide-in-from-left-5 duration-300">
+          <p className="font-medium">Por favor selecciona una planta para continuar</p>
+        </div>
+      )}
+
+      {showCharacteristicError && (
+        <div className="fixed bottom-4 left-4 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg animate-in slide-in-from-left-5 duration-300">
+          <p className="font-medium">Por favor selecciona al menos una característica para continuar</p>
+        </div>
+      )}
+
       <AudioModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
