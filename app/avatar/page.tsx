@@ -1,12 +1,15 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Play, Loader2 } from "lucide-react"
+import { ArrowLeft, Play, Loader2, Info } from "lucide-react"
 import Link from "next/link"
 import AudioModal from "@/components/audio-modal"
+import PlantInfoModal from "@/components/plant-info-modal"
 
 const plants = [
   {
@@ -93,6 +96,8 @@ export default function AvatarPage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null)
+  const [showPlantInfo, setShowPlantInfo] = useState(false)
+  const [selectedPlantInfo, setSelectedPlantInfo] = useState<any>(null)
 
   const toggleCharacteristic = (id: string) => {
     setSelectedCharacteristics((prev) => {
@@ -107,6 +112,12 @@ export default function AvatarPage() {
         return prev
       }
     })
+  }
+
+  const handlePlantInfo = (plant: any, e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent plant selection when clicking info icon
+    setSelectedPlantInfo(plant)
+    setShowPlantInfo(true)
   }
 
   const canProceed = selectedPlant && selectedCharacteristics.length > 0
@@ -168,9 +179,18 @@ export default function AvatarPage() {
                 key={plant.id}
                 className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${
                   selectedPlant === plant.id ? "ring-2 ring-primary shadow-lg scale-105" : "hover:scale-102"
-                } ${plant.color}`}
+                } ${plant.color} relative`}
                 onClick={() => setSelectedPlant(plant.id)}
               >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-white/80 hover:bg-white"
+                  onClick={(e) => handlePlantInfo(plant, e)}
+                >
+                  <Info className="w-4 h-4" />
+                </Button>
+
                 <CardHeader className="text-center pb-4">
                   <img
                     src={plant.image || "/placeholder.svg"}
@@ -279,6 +299,7 @@ export default function AvatarPage() {
         selectedPlant={selectedPlant}
         selectedCharacteristics={selectedCharacteristics}
       />
+      <PlantInfoModal isOpen={showPlantInfo} onClose={() => setShowPlantInfo(false)} plant={selectedPlantInfo} />
     </div>
   )
 }
