@@ -140,10 +140,11 @@ export default function AudioModal({
 
     audio.currentTime = 0
     setCurrentTime(0)
-    setIsPlaying(false)
+    setIsPlaying(true)
+    audio.play()
     if (backgroundAudio) {
       backgroundAudio.currentTime = 0
-      backgroundAudio.pause()
+      backgroundAudio.play()
     }
   }
 
