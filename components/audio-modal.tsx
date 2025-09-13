@@ -91,6 +91,18 @@ export default function AudioModal({
     }
   }, [isOpen])
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "unset"
+    }
+
+    return () => {
+      document.body.style.overflow = "unset"
+    }
+  }, [isOpen])
+
   const togglePlayPause = () => {
     const audio = audioRef.current
     if (!audio) return
@@ -134,7 +146,7 @@ export default function AudioModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="font-heading text-2xl font-bold">Sesión de Mindfulness</h2>
           <Button variant="ghost" size="sm" onClick={onClose}>

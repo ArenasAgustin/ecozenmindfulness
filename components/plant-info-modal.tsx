@@ -3,6 +3,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { useEffect } from "react"
 
 interface Plant {
   id: string
@@ -27,12 +28,24 @@ interface PlantInfoModalProps {
 }
 
 export default function PlantInfoModal({ isOpen, onClose, plant }: PlantInfoModalProps) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "unset"
+    }
+
+    return () => {
+      document.body.style.overflow = "unset"
+    }
+  }, [isOpen])
+
   if (!plant) return null
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-2xl h-[85vh] flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle className="font-heading text-2xl flex items-center gap-4">
             <img
               src={plant.image || "/placeholder.svg"}
@@ -43,7 +56,7 @@ export default function PlantInfoModal({ isOpen, onClose, plant }: PlantInfoModa
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
           {/* Personality & Description */}
           <Card className={plant.color}>
             <CardContent className="p-6">
