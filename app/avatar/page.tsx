@@ -210,9 +210,6 @@ export default function AvatarPage() {
                   <CardTitle className="font-heading text-xl">{plant.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">{plant.personality}</p>
                 </CardHeader>
-                <CardContent>
-                  {/* Only show basic plant info, detailed characteristics are now only in the info modal */}
-                </CardContent>
               </Card>
             ))}
           </div>
@@ -244,7 +241,7 @@ export default function AvatarPage() {
         <div className="text-center">
           <Button
             size="lg"
-            className="text-lg px-12 py-6 rounded-full shadow-lg"
+            className="text-lg px-12 py-6 rounded-full shadow-lg cursor-pointer" // Added cursor-pointer class
             disabled={isGenerating}
             onClick={handleStartMeditation}
           >

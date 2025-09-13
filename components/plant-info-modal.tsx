@@ -3,8 +3,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
 import { useEffect } from "react"
 
 interface Plant {
@@ -57,9 +55,6 @@ export default function PlantInfoModal({ isOpen, onClose, plant }: PlantInfoModa
               />
               {plant.name}
             </DialogTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-5 h-5" />
-            </Button>
           </div>
         </DialogHeader>
 
