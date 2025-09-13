@@ -188,7 +188,7 @@ export default function AvatarPage() {
                   className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-white/80 hover:bg-gray-200"
                   onClick={(e) => handlePlantInfo(plant, e)}
                 >
-                  <Info className="w-4 h-4" />
+                  <Info className="w-4 h-4 text-black" />
                 </Button>
 
                 <CardHeader className="text-center pb-4">

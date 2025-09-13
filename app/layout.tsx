@@ -7,7 +7,7 @@ import { Suspense } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Mindfulness Botánica",
+  title: "EcoZend",
   description: "Tu compañero de meditación con plantas que hablan",
   generator: "v0.app",
   icons: {
