@@ -13,12 +13,12 @@ export default function HomePage() {
         <div className="text-center mb-16">
           <div className="flex justify-center mb-6 opacity-0 animate-fade-in-scale">
             <div className="relative">
-              <img src="/logo.png" alt="EcoZend Logo" className="w-24 h-24 object-contain" />
+              <img src="/logo.png" alt="EcoZen Logo" className="w-24 h-24 object-contain" />
             </div>
           </div>
 
           <h1 className="font-heading text-6xl md:text-7xl font-bold text-foreground mb-6 text-balance opacity-0 animate-fade-in-up delay-200">
-            <span className="text-primary">EcoZend</span>
+            <span className="text-primary">EcoZen</span>
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty opacity-0 animate-fade-in-up delay-400">

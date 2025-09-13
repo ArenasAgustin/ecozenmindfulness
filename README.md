@@ -1,4 +1,4 @@
-# EcoZend 🌱
+# EcoZen 🌱
 
 *Una experiencia de mindfulness personalizada con plantas como guías espirituales*
 
@@ -7,7 +7,7 @@
 
 ## 🌿 Descripción
 
-EcoZend es una aplicación innovadora de mindfulness que combina la sabiduría de la naturaleza con tecnología de vanguardia. Los usuarios pueden elegir entre diferentes plantas como guías espirituales (Loto, Bambú, Ceibo y Cactus), seleccionar sus estados emocionales actuales, y recibir sesiones de meditación personalizadas con audio generado por IA.
+EcoZen es una aplicación innovadora de mindfulness que combina la sabiduría de la naturaleza con tecnología de vanguardia. Los usuarios pueden elegir entre diferentes plantas como guías espirituales (Loto, Bambú, Ceibo y Cactus), seleccionar sus estados emocionales actuales, y recibir sesiones de meditación personalizadas con audio generado por IA.
 
 ## ✨ Características Principales
 
