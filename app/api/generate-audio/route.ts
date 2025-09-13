@@ -96,7 +96,7 @@ Metáforas que puedes usar: ${selectedPlant.metaphors.join(", ")}
 Características de la persona: ${characteristics.join(", ")}
 Instrucciones especiales: ${characteristicPrompts}
 
-Crea una sesión de mindfulness de 3-4 minutos que incluya:
+Crea una sesión de mindfulness de 1-2 minutos que incluya:
 1. Saludo cálido presentándote como ${selectedPlant.name}
 2. Técnica de respiración específica para las características mencionadas
 3. Visualización usando tus metáforas naturales
@@ -115,7 +115,7 @@ Devolveme solo el texo a usar, ten en cuenta que eres un profecional en mindfuln
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-5-mini",
+        model: "openai/gpt-5-nano",
         messages: [
           {
             role: "user",

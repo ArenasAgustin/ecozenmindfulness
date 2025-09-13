@@ -32,7 +32,7 @@ const plants = {
     name: "Ceibo Renaciente",
     image: "/ceibo-red-flower.jpg",
     personality: "Apasionado y resiliente",
-    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Loto_Sereno_2025-09-13T190200-wrnxL1jLIssLaoQ3LckGLMZP8TASWD.mp3", // Using loto audio as default for ceibo
+    backgroundAudio: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Races_del_Ceibo_2025-09-13T193715-QVXVQTYGZVtHxqQMNSgpfEUFKTYGQa.mp3", // Updated ceibo to use its own specific background audio
   },
   cactus: {
     name: "Cactus Resistente",
@@ -214,9 +214,7 @@ export default function AudioModal({
                       <Loader2 className="w-8 h-8 animate-spin text-primary" />
                       <div className="space-y-2">
                         <p className="font-heading text-lg">Generando tu sesión personalizada...</p>
-                        <p className="text-sm text-muted-foreground">
-                          Creando contenido único con OpenRouter y ElevenLabs
-                        </p>
+                        <p className="text-sm text-muted-foreground">Preparando una experiencia única para ti</p>
                       </div>
                     </div>
                   </CardContent>
