@@ -69,17 +69,22 @@ export default function AudioModal({
   const backgroundAudioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    if (backgroundAudioRef.current) {
-      if (isLoading) {
-        // Lower volume during loading
-        backgroundAudioRef.current.volume = (volume[0] / 100) * 0.1
-        backgroundAudioRef.current.play()
-      } else {
-        // Normal volume when not loading
+    if (backgroundAudioRef.current && isLoading) {
+      backgroundAudioRef.current.volume = (volume[0] / 100) * 0.1
+      backgroundAudioRef.current.play()
+    }
+  }, [isLoading])
+
+  useEffect(() => {
+    if (audioUrl && !isLoading && audioRef.current) {
+      audioRef.current.play()
+      setIsPlaying(true)
+      if (backgroundAudioRef.current) {
         backgroundAudioRef.current.volume = (volume[0] / 100) * 0.3
+        backgroundAudioRef.current.play()
       }
     }
-  }, [isLoading, volume])
+  }, [audioUrl, isLoading])
 
   useEffect(() => {
     const audio = audioRef.current
