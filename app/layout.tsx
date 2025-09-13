@@ -10,6 +10,11 @@ export const metadata: Metadata = {
   title: "Mindfulness Botánica",
   description: "Tu compañero de meditación con plantas que hablan",
   generator: "v0.app",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 }
 
 export default function RootLayout({
