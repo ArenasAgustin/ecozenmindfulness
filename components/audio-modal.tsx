@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
-import { Play, Pause, RotateCcw, Volume2, X, Loader2 } from "lucide-react"
+import { Play, Pause, RotateCcw, Volume2, Loader2, AlertCircle } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface AudioModalProps {
   isOpen: boolean
@@ -13,6 +14,7 @@ interface AudioModalProps {
   selectedPlant: string | null
   selectedCharacteristics: string[]
   isLoading?: boolean
+  error?: string | null
 }
 
 const plants = {
@@ -43,14 +45,16 @@ const plants = {
 }
 
 const characteristicLabels = {
-  child: "Niño/a",
   stressed: "Estresado/a",
   sad: "Triste",
-  pregnant: "Embarazada",
   anxious: "Ansioso/a",
   tired: "Cansado/a",
   angry: "Enojado/a",
   confused: "Confundido/a",
+  gratitud: "Gratitud",
+  compasion: "Compasión",
+  alegria: "Alegría",
+  esperanza: "Esperanza",
 }
 
 export default function AudioModal({
@@ -60,6 +64,7 @@ export default function AudioModal({
   selectedPlant,
   selectedCharacteristics,
   isLoading = false,
+  error = null,
 }: AudioModalProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -67,6 +72,13 @@ export default function AudioModal({
   const [volume, setVolume] = useState([80])
   const audioRef = useRef<HTMLAudioElement>(null)
   const backgroundAudioRef = useRef<HTMLAudioElement>(null)
+  const [hasError, setHasError] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      setHasError(false)
+    }
+  }, [isOpen])
 
   useEffect(() => {
     if (backgroundAudioRef.current && isLoading) {
@@ -93,15 +105,21 @@ export default function AudioModal({
     const updateTime = () => setCurrentTime(audio.currentTime)
     const handleEnded = () => setIsPlaying(false)
     const handleLoadedMetadata = () => setDuration(audio.duration)
+    const handleError = () => {
+      setHasError(true)
+      setIsPlaying(false)
+    }
 
     audio.addEventListener("timeupdate", updateTime)
     audio.addEventListener("ended", handleEnded)
     audio.addEventListener("loadedmetadata", handleLoadedMetadata)
+    audio.addEventListener("error", handleError)
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime)
       audio.removeEventListener("ended", handleEnded)
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata)
+      audio.removeEventListener("error", handleError)
     }
   }, [audioUrl])
 
@@ -117,18 +135,6 @@ export default function AudioModal({
         backgroundAudioRef.current.pause()
         backgroundAudioRef.current.currentTime = 0
       }
-    }
-  }, [isOpen])
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "unset"
-    }
-
-    return () => {
-      document.body.style.overflow = "unset"
     }
   }, [isOpen])
 
@@ -181,7 +187,6 @@ export default function AudioModal({
       if (isLoading) {
         backgroundAudioRef.current.volume = value[0] / 100
       } else {
-        // Normal background volume
         backgroundAudioRef.current.volume = (value[0] / 100) * 0.3
       }
     }
@@ -192,19 +197,14 @@ export default function AudioModal({
     .map((char) => characteristicLabels[char as keyof typeof characteristicLabels])
     .join(", ")
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-in fade-in-0 duration-500">
-      <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full max-h-screen overflow-y-auto animate-in zoom-in-95 slide-in-from-bottom-4 duration-500">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="font-heading text-2xl font-bold">Sesión de Mindfulness</h2>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="w-5 h-5" />
-          </Button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-screen overflow-y-auto custom-scrollbar">
+        <DialogHeader>
+          <DialogTitle className="font-heading text-2xl font-bold">Sesión de Mindfulness</DialogTitle>
+        </DialogHeader>
 
-        <div className="p-6">
+        <div className="space-y-6">
           <Card className="shadow-lg border-0">
             <CardHeader className="text-center">
               <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center overflow-hidden">
@@ -244,7 +244,31 @@ export default function AudioModal({
                 </Card>
               )}
 
-              {!isLoading && (
+              {(error || hasError) && !isLoading && (
+                <Card className="bg-gradient-to-r from-red-50 to-red-100 border-red-200 dark:from-red-950/20 dark:to-red-900/20 dark:border-red-800">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <AlertCircle className="w-8 h-8 text-red-500" />
+                      <div className="space-y-2">
+                        <p className="font-heading text-lg text-red-700 dark:text-red-300">Error al generar el audio</p>
+                        <p className="text-sm text-red-600 dark:text-red-400">
+                          {error || "No se pudo cargar el audio. Por favor, intenta nuevamente."}
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={onClose}
+                          className="mt-2 cursor-pointer border-red-300 text-red-700 hover:bg-red-50 dark:border-red-700 dark:text-red-300 dark:hover:bg-red-950/20 bg-transparent"
+                        >
+                          Cerrar y reintentar
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {!isLoading && !error && !hasError && (
                 <>
                   {/* Progress Bar */}
                   <div className="space-y-2">
@@ -267,7 +291,7 @@ export default function AudioModal({
                     <Button
                       variant="outline"
                       size="lg"
-                      className="rounded-full w-12 h-12 bg-transparent"
+                      className="rounded-full w-12 h-12 bg-transparent cursor-pointer"
                       onClick={resetAudio}
                       disabled={!audioUrl}
                     >
@@ -276,7 +300,7 @@ export default function AudioModal({
 
                     <Button
                       size="lg"
-                      className="rounded-full w-16 h-16 shadow-lg"
+                      className="rounded-full w-16 h-16 shadow-lg cursor-pointer"
                       onClick={togglePlayPause}
                       disabled={!audioUrl}
                     >
@@ -327,7 +351,7 @@ export default function AudioModal({
 
         {audioUrl && <audio ref={audioRef} src={audioUrl} preload="metadata" />}
         {currentPlant && <audio ref={backgroundAudioRef} src={currentPlant.backgroundAudio} preload="metadata" loop />}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }

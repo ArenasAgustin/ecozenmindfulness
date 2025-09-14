@@ -28,7 +28,7 @@ export default function HomePage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in-up delay-500">
             <Link href="/avatar">
-              <Button size="lg" className="text-lg px-8 py-6 rounded-full">
+              <Button size="lg" className="text-lg px-8 py-6 rounded-full cursor-pointer">
                 <Leaf className="w-5 h-5 mr-2" />
                 Comenzar Viaje
               </Button>
@@ -84,7 +84,7 @@ export default function HomePage() {
                 Comienza tu práctica de mindfulness con la guía de plantas sabias que comprenden tu corazón.
               </p>
               <Link href="/avatar">
-                <Button size="lg" className="text-lg px-12 py-6 rounded-full shadow-lg">
+                <Button size="lg" className="text-lg px-12 py-6 rounded-full shadow-lg cursor-pointer">
                   <Sparkles className="w-5 h-5 mr-2" />
                   Elegir Mi Planta Guía
                 </Button>

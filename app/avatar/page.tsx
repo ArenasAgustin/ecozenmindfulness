@@ -199,7 +199,7 @@ export default function AvatarPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-white/80 hover:bg-gray-200"
+                  className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-white/80 hover:bg-gray-200 cursor-pointer"
                   onClick={(e) => handlePlantInfo(plant, e)}
                 >
                   <Info className="w-4 h-4 text-black" />
@@ -230,7 +230,7 @@ export default function AvatarPage() {
               <Button
                 key={char.id}
                 variant={selectedCharacteristics.includes(char.id) ? "default" : "outline"}
-                className="h-20 flex flex-col gap-2 rounded-2xl"
+                className="h-20 flex flex-col gap-2 rounded-2xl cursor-pointer"
                 onClick={() => toggleCharacteristic(char.id)}
                 disabled={selectedCharacteristics.length >= 2 && !selectedCharacteristics.includes(char.id)}
               >

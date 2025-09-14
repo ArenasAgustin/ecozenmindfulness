@@ -187,7 +187,7 @@ export default function MeditationPage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="rounded-full w-14 h-14 bg-transparent"
+                  className="rounded-full w-14 h-14 bg-transparent cursor-pointer"
                   onClick={resetAudio}
                   disabled={!audioUrl}
                 >
@@ -196,7 +196,7 @@ export default function MeditationPage() {
 
                 <Button
                   size="lg"
-                  className="rounded-full w-20 h-20 shadow-lg"
+                  className="rounded-full w-20 h-20 shadow-lg cursor-pointer"
                   onClick={togglePlayPause}
                   disabled={!audioUrl}
                 >
