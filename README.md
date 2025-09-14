@@ -88,13 +88,13 @@ npm start
 
 La aplicación está desplegada automáticamente en Vercel. Cualquier cambio en la rama principal se despliega automáticamente.
 
-**URL de Producción**: [https://vercel.com/arenasagustins-projects/v0-hackathon](https://vercel.com/arenasagustins-projects/v0-hackathon)
+**URL de Producción**: [https://ecozenmindfulness.vercel.app/](https://ecozenmindfulness.vercel.app/)
 
 ## 🤝 Contribución
 
 Este proyecto fue desarrollado como parte de un hackathon. Para continuar el desarrollo:
 
-1. Visita el proyecto en v0: [https://v0.app/chat/projects/P1RqHHVxLc3](https://v0.app/chat/projects/P1RqHHVxLc3)
+1. Visita el proyecto en v0: [https://v0.dev/community/eco-zen-g0qE9fXBlwe](https://v0.dev/community/eco-zen-g0qE9fXBlwe)
 2. Los cambios se sincronizan automáticamente con este repositorio
 3. Vercel despliega automáticamente desde este repositorio
 
