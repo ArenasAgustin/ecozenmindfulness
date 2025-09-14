@@ -98,9 +98,6 @@ Este proyecto fue desarrollado como parte de un hackathon. Para continuar el des
 2. Los cambios se sincronizan automáticamente con este repositorio
 3. Vercel despliega automáticamente desde este repositorio
 
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT.
 
 ---
 
